@@ -1,1 +1,1 @@
-include ':app', ':BestP', ':javaapkcomCalculator'
+include ':app', ':BestP', ':javaapkcomCalculator', ':facecrack'
