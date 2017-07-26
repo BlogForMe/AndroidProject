@@ -21,3 +21,11 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+project.ext {
+    //Sdk and tools
+
+    //App dependencies
+    supportLibraryVersion = "26.0.0-alpha1"
+    exoplayerVersion = "r2.4.2";
+
+}
