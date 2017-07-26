@@ -58,6 +58,19 @@ public class MainActivity extends AppCompatActivity {
         Log.d("ssid", "--" + DataUtil.generateSSID());
     }
 
+    public void showHack(View v) {
+        DeviceInfoUtil instance = DeviceInfoUtil.getInstanceDv(this);
+        ((TextView) v).setText(" IMEI ：" + instance.getDeviceId() + " IMSI : " + instance.getImsiId() + "\n "
+                + " MAC " + instance.getMacAddress() + "\n " + "  SimSNumber " + instance.getSimSerialNumber() + "\n"
+                + "品牌: " + instance.getBrand() + " 型号: " + instance.getPhoneModel() + "\n"
+                + " SDK_INT: " + Build.VERSION.SDK_INT + "  display: " + Build.DISPLAY + "   androidId:  " + instance.getAndroidId() + "\n"
+                + Build.VERSION.RELEASE + " build.id " + Build.ID /*+ "  fingerprint " + Build.FINGERPRINT*/);
+//                " 运营商编号  " + instance.getNetworkOperator() + "  运营商名称  " + instance.getNetworkOperatorName() + "\n" +
+//                "SimOperator" + instance.getSimOperator() + " SOperatorN " + instance.getSimOperatorName() + "\n" +
+//                " DataActivity " + instance.getDataActivity() + " DeviceSoft " + instance.getDeviceSoftwar eVersion() +
+//                "  Line1Number  " + instance.getLine1Number() );
+    }
+
     public static String n() {
         return new String(new BigInteger("59a860345b335056065972a615609b8438025b113423b8219", 12).toByteArray());
     }
@@ -141,19 +154,6 @@ public class MainActivity extends AppCompatActivity {
         //            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setComponent(componentName);
         startActivity(intent);
-    }
-
-    public void init(View v) {
-        DeviceInfoUtil instance = DeviceInfoUtil.getInstanceDv(this);
-        ((TextView) v).setText(" IMEI ：" + instance.getDeviceId() + " IMSI : " + instance.getImsiId() + "\n "
-                + " MAC " + instance.getMacAddress() + "\n " + "  SimSNumber " + instance.getSimSerialNumber() + "\n"
-                + "品牌: " + instance.getBrand() + " 型号: " + instance.getPhoneModel() + "\n"
-                + " SDK_INT: " + Build.VERSION.SDK_INT + "  display: " + Build.DISPLAY + "   androidId:  " + instance.getAndroidId() + "\n"
-                + Build.VERSION.RELEASE + " build.id " + Build.ID /*+ "  fingerprint " + Build.FINGERPRINT*/);
-//                " 运营商编号  " + instance.getNetworkOperator() + "  运营商名称  " + instance.getNetworkOperatorName() + "\n" +
-//                "SimOperator" + instance.getSimOperator() + " SOperatorN " + instance.getSimOperatorName() + "\n" +
-//                " DataActivity " + instance.getDataActivity() + " DeviceSoft " + instance.getDeviceSoftwar eVersion() +
-//                "  Line1Number  " + instance.getLine1Number() );
     }
 
 //    @Override
