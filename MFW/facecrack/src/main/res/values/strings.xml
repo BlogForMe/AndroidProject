@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">FaceCrack</string>
+    <string name="accessibility_service_label">FB辅助</string>
 </resources>

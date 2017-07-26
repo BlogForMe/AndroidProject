@@ -640,7 +640,8 @@ public class XCheat implements IXposedHookLoadPackage {
                         XposedBridge.log("imei="+deviceid);
                         if(!TextUtils.isEmpty(deviceid)){
                             XposedBridge.log("修改deviceid");
-                            param.setResult(deviceid);
+//                            param.setResult(deviceid);
+                            param.setResult("hehe");
                         }else{
                             XposedBridge.log("获取deviceid为空");
 
