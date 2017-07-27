@@ -4,5 +4,4 @@
     android:accessibilityFeedbackType="feedbackSpoken"
     android:canRetrieveWindowContent="true"
     android:notificationTimeout="100"
-    android:packageNames="com.example.android.myFirstApp, com.example.android.mySecondApp"
-    android:settingsActivity="com.example.android.apis.accessibility.TestBackActivity" />
+    android:packageNames="com.example.android.myFirstApp, com.example.android.mySecondApp" />
