@@ -35,7 +35,7 @@ public class SpotAdActivity extends BaseActivity {
 		// .IMAGE_TYPE_HORIZONTAL);
 		// 竖图
 		SpotManager.getInstance(mContext).setImageType(SpotManager.IMAGE_TYPE_VERTICAL);
-		
+
 		// 设置动画类型，默认高级动画
 		//		// 无动画
 		//		SpotManager.getInstance(mContext).setAnimationType(SpotManager
@@ -46,20 +46,20 @@ public class SpotAdActivity extends BaseActivity {
 		// 高级动画
 		SpotManager.getInstance(mContext)
 		                    .setAnimationType(SpotManager.ANIMATION_TYPE_ADVANCED);
-		
+
 		Button btnShowSpotAd = (Button) findViewById(R.id.btn_show_spot_ad);
-		
+
 		btnShowSpotAd.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				// 展示插屏广告
 				SpotManager.getInstance(mContext).showSpot(mContext, new SpotListener() {
-					
+
 					@Override
 					public void onShowSuccess() {
 						logInfo("插屏展示成功");
 					}
-					
+
 					@Override
 					public void onShowFailed(int errorCode) {
 						logError("插屏展示失败");
@@ -84,12 +84,12 @@ public class SpotAdActivity extends BaseActivity {
 							break;
 						}
 					}
-					
+
 					@Override
 					public void onSpotClosed() {
 						logDebug("插屏被关闭");
 					}
-					
+
 					@Override
 					public void onSpotClicked(boolean isWebPage) {
 						logDebug("插屏被点击");
@@ -100,34 +100,5 @@ public class SpotAdActivity extends BaseActivity {
 		});
 	}
 	
-	@Override
-	public void onBackPressed() {
-		// 点击后退关闭插屏广告
-		if (SpotManager.getInstance(mContext).isSpotShowing()) {
-			SpotManager.getInstance(mContext).hideSpot();
-		} else {
-			super.onBackPressed();
-		}
-	}
-	
-	@Override
-	protected void onPause() {
-		super.onPause();
-		// 插屏广告
-		SpotManager.getInstance(mContext).onPause();
-	}
-	
-	@Override
-	protected void onStop() {
-		super.onStop();
-		// 插屏广告
-		SpotManager.getInstance(mContext).onStop();
-	}
-	
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		// 插屏广告
-		SpotManager.getInstance(mContext).onDestroy();
-	}
+
 }
