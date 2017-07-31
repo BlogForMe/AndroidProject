@@ -11,7 +11,7 @@ import android.support.annotation.Nullable;
 import com.us.eoe.database.DBHelper;
 
 /**
- * Created by blitzfeng on 2017/7/21.
+ * Created by  on 2017/7/21.
  */
 
 public class DeviceInfoProvider extends ContentProvider {
@@ -24,7 +24,6 @@ public class DeviceInfoProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-
         database = new DBHelper(getContext()).getReadableDatabase();
         return true;
     }
