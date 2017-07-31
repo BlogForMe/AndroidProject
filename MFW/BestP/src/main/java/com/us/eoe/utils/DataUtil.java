@@ -75,7 +75,7 @@ public class DataUtil {
             BufferedReader reader = new BufferedReader(rr);
             String imei = null;
             while ((imei = reader.readLine())!=null){
-                System.out.println("im:"+imei);
+//                System.out.println("im:"+imei);
                 list.add(imei.trim());
             }
 
@@ -108,7 +108,7 @@ public class DataUtil {
             BufferedReader reader = new BufferedReader(rr);
             String imsi = null;
             while ((imsi = reader.readLine())!=null){
-                System.out.println("imsi:"+imsi);
+//                System.out.println("imsi:"+imsi);
                 list.add(imsi.trim());
             }
 

@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
         imageView = (ImageView) findViewById(R.id.iv);
         String ss = DataUtil.getRandom(15, 0);
-        System.out.println("ss:" + ss);
+//        System.out.println("ss:" + ss);
 
 /*System.out.println("n:"+n()+"--"+m());
         System.out.println("a:"+a(n()+m()));
@@ -51,11 +51,13 @@ public class MainActivity extends AppCompatActivity {
         Log.d("imsi",telephonyManager.getSubscriberId());
         Log.d("simnum",telephonyManager.getSimSerialNumber());*/
 
-        System.out.println("imei:" + DataUtil.generateIMEI());
+//        System.out.println("imei:" + DataUtil.generateIMEI());
 
         dbDao = new DbUtil(this);
 
-        Log.d("ssid", "--" + DataUtil.generateSSID());
+//        Log.d("ssid", "--" + DataUtil.generateSSID());
+
+        addData();
     }
 
     public void showHack(View v) {
@@ -104,12 +106,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void addData(View v) {
+    public void addData() {
         List<String> imeiList = DataUtil.getImei(this);
         List<String> imsiList = DataUtil.getImsi(this);
         int imeiSize = imeiList.size();
         int imsiSize = imsiList.size();
-        for (int i = 0; i < 500; i++) {
+        for (int i = 0; i < 10; i++) {
 
             DeviceBean bean = new DeviceBean();
             String operatorName = DataUtil.generateSimOperateorName();
