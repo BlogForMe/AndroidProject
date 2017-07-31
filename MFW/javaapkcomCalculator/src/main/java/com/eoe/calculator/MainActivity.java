@@ -1,25 +1,28 @@
 package com.eoe.calculator;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
-import com.qm.lo.Conn;
 
-import net.youmi.android.AdManager;
+import com.eoe.calculator.utils.OpeUtil;
 
-import java.lang.ref.WeakReference;
-import java.math.BigDecimal;
+import net.youmi.android.nm.cm.ErrorCode;
+import net.youmi.android.nm.sp.SpotListener;
+import net.youmi.android.nm.sp.SpotManager;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static com.eoe.calculator.BaseActivity.TAG;
 
 public class MainActivity extends Activity implements OnClickListener {
 
@@ -55,7 +58,6 @@ public class MainActivity extends Activity implements OnClickListener {
     public static final String nan = "NaN";
     public static final String infinite = "∞";
 
-    private Conn conn;
 
 
     private Handler mHandler = new Handler() {
@@ -71,21 +73,13 @@ public class MainActivity extends Activity implements OnClickListener {
     };
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        conn = Conn.getInstance(this);
         initView();
         initData();
-//        initCp();
-    }
-
-
-    private void initCp() {
-        conn.set("051175a73dd18190", "51ab2ed9767e2dee"); //外插弹出时间测试  22109
-        conn.launch();
+//        setupSpotAd();
     }
 
 
@@ -114,7 +108,6 @@ public class MainActivity extends Activity implements OnClickListener {
         mEqualBtn = (Button) this.findViewById(R.id.equal_btn);
         mSubBtn = (Button) this.findViewById(R.id.sub_btn);
         setOnClickListener();// 调用监听事件
-
     }
 
     /**
@@ -345,10 +338,8 @@ public class MainActivity extends Activity implements OnClickListener {
 
     // 清理屏
     private void clearAllScreen() {
-
         clearResultScreen();
         clearInputScreen();
-
     }
 
     private void clearResultScreen() {
@@ -447,7 +438,7 @@ public class MainActivity extends Activity implements OnClickListener {
                             d = Double.parseDouble(mInputList.get(i + 1).getInput());
                             if (getResources().getString(R.string.multply).equals(item.getInput())) {
                                 mInputList.set(i - 1,
-                                        new InputItem(String.valueOf(mul(c, d)), InputItem.InputType.DOUBLE_TYPE));
+                                        new InputItem(String.valueOf(OpeUtil.mul(c, d)), InputItem.InputType.DOUBLE_TYPE));
                             } else {
                                 if (d == 0) {
                                     mLastInputstatus = ERROR;
@@ -459,7 +450,7 @@ public class MainActivity extends Activity implements OnClickListener {
                                     return -1;
                                 }
                                 mInputList.set(i - 1,
-                                        new InputItem(String.valueOf(div(c, d)), InputItem.InputType.DOUBLE_TYPE));
+                                        new InputItem(String.valueOf(OpeUtil.div(c, d)), InputItem.InputType.DOUBLE_TYPE));
                             }
                         }
                     }
@@ -516,10 +507,10 @@ public class MainActivity extends Activity implements OnClickListener {
                             d = Double.parseDouble(mInputList.get(i + 1).getInput());
                             if (getResources().getString(R.string.add).equals(item.getInput())) {
                                 mInputList.set(i - 1,
-                                        new InputItem(String.valueOf(add(c, d)), InputItem.InputType.DOUBLE_TYPE));
+                                        new InputItem(String.valueOf(OpeUtil.add(c, d)), InputItem.InputType.DOUBLE_TYPE));
                             } else {
                                 mInputList.set(i - 1,
-                                        new InputItem(String.valueOf(sub(c, d)), InputItem.InputType.DOUBLE_TYPE));
+                                        new InputItem(String.valueOf(OpeUtil.sub(c, d)), InputItem.InputType.DOUBLE_TYPE));
                             }
                         }
                     }
@@ -572,32 +563,101 @@ public class MainActivity extends Activity implements OnClickListener {
         }
     }
 
-    public static Double div(Double v1, Double v2) {
-        BigDecimal b1 = new BigDecimal(v1.toString());
-        BigDecimal b2 = new BigDecimal(v2.toString());
-        return b1.divide(b2, 10, BigDecimal.ROUND_HALF_UP).doubleValue();
+    /**
+     * 设置插屏广告
+     */
+    private void setupSpotAd() {
+        // 设置插屏图片类型，默认竖图
+        //		// 横图
+        //		SpotManager.getInstance(this).setImageType(SpotManager
+        // .IMAGE_TYPE_HORIZONTAL);
+        // 竖图
+        SpotManager.getInstance(this).setImageType(SpotManager.IMAGE_TYPE_VERTICAL);
+
+        // 设置动画类型，默认高级动画
+        //		// 无动画
+        //		SpotManager.getInstance(this).setAnimationType(SpotManager
+        //				.ANIMATION_TYPE_NONE);
+        //		// 简单动画
+        //		SpotManager.getInstance(this)
+        //		                    .setAnimationType(SpotManager.ANIMATION_TYPE_SIMPLE);
+        // 高级动画
+        SpotManager.getInstance(this)
+                .setAnimationType(SpotManager.ANIMATION_TYPE_ADVANCED);
+
+                // 展示插屏广告
+                SpotManager.getInstance(this).showSpot(this, new SpotListener() {
+
+                    @Override
+                    public void onShowSuccess() {
+                        Log.i(TAG, "插屏展示成功");
+                    }
+
+                    @Override
+                    public void onShowFailed(int errorCode) {
+                        Log.i(TAG, "插屏展示失败");
+                        switch (errorCode) {
+                            case ErrorCode.NON_NETWORK:
+                                Log.i(TAG, "网络异常");
+                                break;
+                            case ErrorCode.NON_AD:
+                                Log.i(TAG, "暂无插屏广告");
+                                break;
+                            case ErrorCode.RESOURCE_NOT_READY:
+                                Log.i(TAG, "插屏资源还没准备好");
+                                break;
+                            case ErrorCode.SHOW_INTERVAL_LIMITED:
+                                Log.i(TAG, "请勿频繁展示");
+                                break;
+                            case ErrorCode.WIDGET_NOT_IN_VISIBILITY_STATE:
+                                Log.i(TAG, "请设置插屏为可见状态");
+                                break;
+                            default:
+                                Log.i(TAG, "请稍后再试");
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onSpotClosed() {
+                        Log.i(TAG, "插屏被关闭");
+                    }
+
+                    @Override
+                    public void onSpotClicked(boolean isWebPage) {
+                        Log.i(TAG, "插屏被点击");
+                    }
+                });
+            }
+
+    @Override
+    public void onBackPressed() {
+        // 点击后退关闭插屏广告
+        if (SpotManager.getInstance(this).isSpotShowing()) {
+            SpotManager.getInstance(this).hideSpot();
+        } else {
+            super.onBackPressed();
+        }
     }
 
-    public static Double sub(Double v1, Double v2) {
-        BigDecimal b1 = new BigDecimal(v1.toString());
-        BigDecimal b2 = new BigDecimal(v2.toString());
-        return b1.subtract(b2).doubleValue();
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // 插屏广告
+        SpotManager.getInstance(this).onPause();
     }
 
-    public static Double add(Double v1, Double v2) {
-        BigDecimal b1 = new BigDecimal(v1.toString());
-        BigDecimal b2 = new BigDecimal(v2.toString());
-        return b1.add(b2).doubleValue();
-    }
-
-    public static Double mul(Double v1, Double v2) {
-        BigDecimal b1 = new BigDecimal(v1.toString());
-        BigDecimal b2 = new BigDecimal(v2.toString());
-        return b1.multiply(b2).doubleValue();
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // 插屏广告
+        SpotManager.getInstance(this).onStop();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        // 插屏广告
+        SpotManager.getInstance(this).onDestroy();
     }
 }

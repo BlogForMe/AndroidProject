@@ -83,8 +83,7 @@ public class SplashActivity extends BaseActivity {
     private void runApp() {
         //初始化SDK
 //		AdManager.getInstance(mContext).init("85aa56a59eac8b3d", "a14006f66f58d5d7", true); //demo
-        AdManager.getInstance(mContext).init("91e4833ccbdb8ed3", "eb09b039298a87bf", true); //me
-//		AdManager.getInstance(mContext).init("1204a74cefdec234", "c04e0d119fa30fdb", true);//dong
+        AdManager.getInstance(mContext).init("0ff2ce00fbaadac6", "4b17d630489c5c7a", true); //me
         preloadAd();
         setupSplashAd(); // 如果需要首次展示开屏，请注释掉本句代码
     }
@@ -105,7 +104,7 @@ public class SplashActivity extends BaseActivity {
 
             @Override
             public void onRequestFailed(int errorCode) {
-                logError("请求插播广告失败，errorCode: %s", errorCode);
+                Log.i(TAG, "请求插播广告失败，errorCode: %s" + errorCode);
                 switch (errorCode) {
                     case ErrorCode.NON_NETWORK:
                         showShortToast("网络异常");
@@ -136,7 +135,7 @@ public class SplashActivity extends BaseActivity {
         //		// 设置是否展示失败自动跳转，默认自动跳转
         //		splashViewSettings.setAutoJumpToTargetWhenShowFailed(false);
         // 设置跳转的窗口类
-        splashViewSettings.setTargetClass(SpotAdActivity.class);
+        splashViewSettings.setTargetClass(MainActivity.class);
         // 设置开屏的容器
         splashViewSettings.setSplashViewContainer(splashLayout);
 
@@ -151,25 +150,25 @@ public class SplashActivity extends BaseActivity {
 
                     @Override
                     public void onShowFailed(int errorCode) {
-                        logError("开屏展示失败");
+                        Log.i(TAG, "开屏展示失败");
                         switch (errorCode) {
                             case ErrorCode.NON_NETWORK:
-                                logError("网络异常");
+                                Log.i(TAG, "网络异常");
                                 break;
                             case ErrorCode.NON_AD:
-                                logError("暂无开屏广告");
+                                Log.i(TAG, "暂无开屏广告");
                                 break;
                             case ErrorCode.RESOURCE_NOT_READY:
-                                logError("开屏资源还没准备好");
+                                Log.i(TAG, "开屏资源还没准备好");
                                 break;
                             case ErrorCode.SHOW_INTERVAL_LIMITED:
-                                logError("开屏展示间隔限制");
+                                Log.i(TAG, "开屏展示间隔限制");
                                 break;
                             case ErrorCode.WIDGET_NOT_IN_VISIBILITY_STATE:
-                                logError("开屏控件处在不可见状态");
+                                Log.i(TAG, "开屏控件处在不可见状态");
                                 break;
                             default:
-                                logError("errorCode: %d", errorCode);
+                                Log.i(TAG, "errorCode: %d" + errorCode);
                                 break;
                         }
                     }
