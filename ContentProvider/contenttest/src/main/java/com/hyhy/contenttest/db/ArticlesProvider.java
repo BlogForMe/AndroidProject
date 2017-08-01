@@ -2,6 +2,7 @@ package com.hyhy.contenttest.db;
 
 import android.content.ContentProvider;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
@@ -25,9 +26,8 @@ public class ArticlesProvider extends ContentProvider {
     /**
      * Match Code
      */
-    public static final int ITEM = 1;
-    public static final int ITEM_ID = 2;
-    public static final int ITEM_POS = 3;
+    public static final int ARTICLE_ALL = 0;
+    public static final int ARTICLE_SINGLE = 1;
 
 
     /**
@@ -38,9 +38,8 @@ public class ArticlesProvider extends ContentProvider {
 
     static {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        uriMatcher.addURI(AUTHORITY, "item", ITEM);          //匹配记录集合
-        uriMatcher.addURI(AUTHORITY, TABLE_NAME + "/#", ITEM_ID);    //匹配单条记录
-        uriMatcher.addURI(AUTHORITY, "pos/#", ITEM_POS);
+        uriMatcher.addURI(AUTHORITY, "item", ARTICLE_ALL);          //匹配记录集合
+        uriMatcher.addURI(AUTHORITY, TABLE_NAME + "/#", ARTICLE_SINGLE);    //匹配单条记录
     }
 
     private ArticleDbHelper helper;
@@ -54,17 +53,30 @@ public class ArticlesProvider extends ContentProvider {
         return false;
     }
 
+    @Nullable
+    @Override
+    public String getType(@NonNull Uri uri) {
+        int match = uriMatcher.match(uri);
+        switch (match) {
+            case ARTICLE_ALL:
+                return CONTENT_TYPE;
+            case ARTICLE_SINGLE:
+                return CONTENT_ITEM_TYPE;
+            default:
+                throw new IllegalArgumentException("Unknown URI: " + uri);
+        }
+    }
+
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         db = helper.getReadableDatabase();
         int match = uriMatcher.match(uri);
         switch (match) {
-            case ITEM:
+            case ARTICLE_ALL:
                 //doesn't need any code in my provider.
                 break;
-            case ITEM_ID:
-                break;
-            case ITEM_POS:
+            case ARTICLE_SINGLE:
+//                long _id  = ContentUris.parseId()
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
@@ -72,26 +84,23 @@ public class ArticlesProvider extends ContentProvider {
         return db.query(TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
     }
 
-    @Nullable
-    @Override
-    public String getType(@NonNull Uri uri) {
-        int match = uriMatcher.match(uri);
-        switch (match) {
-            case ITEM:
-                return CONTENT_TYPE;
-            case ITEM_ID:
-            case ITEM_POS:
-                return CONTENT_ITEM_TYPE;
-            default:
-                throw new IllegalArgumentException("Unknown URI: " + uri);
-        }
-    }
 
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
+        int match = uriMatcher.match(uri);
+        if (match != ARTICLE_ALL) {
+            throw new IllegalArgumentException("Wrong URI:" + uri);
+        }
+        db = helper.getWritableDatabase();
+        long rowId = db.insert(TABLE_NAME, null, values);
+        if (rowId > 0) {
+            notifyDataChanged();
+            return ContentUris.withAppendedId(uri, rowId);
+        }
         return null;
     }
+
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {

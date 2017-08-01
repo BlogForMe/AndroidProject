@@ -11,7 +11,7 @@ public class ArticleReaderContract {
 
     public static abstract class Articles implements BaseColumns {
         public static final String TABLE_NAME = "article";
-        public static final String COULUMN_NAME_ENTRY_ID = "_title";
+        public static final String COLUMN_NAME_ENTRY_ID = "_title";
         public static final String COLUMN_NAME_TITILE = "_abstract";
         public static final String COLUMN_NAME_SUBTITLE = "_url";
     }

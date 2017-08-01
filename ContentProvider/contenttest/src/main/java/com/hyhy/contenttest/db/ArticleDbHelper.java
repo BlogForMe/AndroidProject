@@ -17,7 +17,7 @@ public class ArticleDbHelper extends SQLiteOpenHelper {
     private static final String COMMA_SEP = ",";
     private static final String SQL_CREATE_ENTRIES = "CREATE TABLE " + ArticleReaderContract.Articles.TABLE_NAME + " (" +
             ArticleReaderContract.Articles._ID + " INTEGER PRIMARY KEY," +
-            ArticleReaderContract.Articles.COULUMN_NAME_ENTRY_ID + TEXT_TYPE + COMMA_SEP +
+            ArticleReaderContract.Articles.COLUMN_NAME_ENTRY_ID + TEXT_TYPE + COMMA_SEP +
             ArticleReaderContract.Articles.COLUMN_NAME_TITILE + TEXT_TYPE + COMMA_SEP +
             ArticleReaderContract.Articles.COLUMN_NAME_SUBTITLE + TEXT_TYPE + ")";
     private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + ArticleReaderContract.Articles.TABLE_NAME;
