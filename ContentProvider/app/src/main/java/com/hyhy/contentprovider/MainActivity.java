@@ -46,6 +46,4 @@ public class MainActivity extends AppCompatActivity {
             System.out.println(c.getString(c.getColumnIndex(COLUMN_NAME_TITLE)));
         }
     }
-
-
 }
