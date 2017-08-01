@@ -11,14 +11,17 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import static com.hyhy.contenttest.db.ArticleReaderContract.Articles.TABLE_NAME;
+import com.hyhy.mylibrary.ArticleDbHelper;
+
+import static com.hyhy.mylibrary.ArticleReaderContract.Articles.TABLE_NAME;
+
 
 /**
  * Created by Administrator on 2017/7/31.
  */
 
 public class ArticlesProvider extends ContentProvider {
-    public static final String AUTHORITY = "com.hyhy.contenttest.db";  //标识特定ContentProvider,使用包名使他唯一
+    public static final String AUTHORITY = "com.hyhy.contenttest.db.ArticlesProvider";  //标识特定ContentProvider,使用包名使他唯一
     private static final Uri NOTIFY_URI = Uri.parse("content://" + AUTHORITY + "/" + TABLE_NAME);
     private static final UriMatcher uriMatcher;
 
@@ -38,7 +41,7 @@ public class ArticlesProvider extends ContentProvider {
 
     static {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        uriMatcher.addURI(AUTHORITY, "item", ARTICLE_ALL);          //匹配记录集合
+        uriMatcher.addURI(AUTHORITY, TABLE_NAME, ARTICLE_ALL);          //匹配记录集合
         uriMatcher.addURI(AUTHORITY, TABLE_NAME + "/#", ARTICLE_SINGLE);    //匹配单条记录
     }
 

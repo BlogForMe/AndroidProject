@@ -18,8 +18,8 @@
         </activity>
 
         <provider
-            android:name=".db.FeedProvider"
-            android:authorities="com.hyhy.contenttest.db.FeedProvider"
+            android:name=".db.ArticlesProvider"
+            android:authorities="com.hyhy.contenttest.db.ArticlesProvider"
             android:exported="true" />
     </application>
 
