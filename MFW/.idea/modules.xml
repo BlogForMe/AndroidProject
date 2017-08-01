@@ -6,7 +6,6 @@
       <module fileurl="file://$PROJECT_DIR$/MFW.iml" filepath="$PROJECT_DIR$/MFW.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/facecrack/facecrack.iml" filepath="$PROJECT_DIR$/facecrack/facecrack.iml" />
-      <module fileurl="file://$PROJECT_DIR$/javaapkcomCalculator/javaapkcomCalculator.iml" filepath="$PROJECT_DIR$/javaapkcomCalculator/javaapkcomCalculator.iml" />
     </modules>
   </component>
 </project>

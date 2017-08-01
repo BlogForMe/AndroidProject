@@ -15,7 +15,7 @@ import com.us.eoe.database.DBHelper;
  */
 
 public class DeviceInfoProvider extends ContentProvider {
-    public static final String AUTHRITY = "DeviceInfoProvider";
+    public static final String AUTHRITY = "com.us.eoe.utils.DeviceInfoProvider";
     public static final Uri LOCATION_CONTENT_URI = Uri.parse("content://" + AUTHRITY + "/location");
     public static final Uri DEVICE_CONTENT_URI = Uri.parse("content://" + AUTHRITY + "/device");
     SQLiteDatabase database;

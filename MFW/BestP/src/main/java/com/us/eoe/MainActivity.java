@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
 //        Log.d("ssid", "--" + DataUtil.generateSSID());
 
-        addData();
+
     }
 
     public void showHack(View v) {
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void addData() {
+    public void addData(View v) {
         List<String> imeiList = DataUtil.getImei(this);
         List<String> imsiList = DataUtil.getImsi(this);
         int imeiSize = imeiList.size();

@@ -5,8 +5,10 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -48,7 +50,7 @@ public class XCheat implements IXposedHookLoadPackage {
     private List<DeviceBean> list = new ArrayList<>();
     private Uri uri = Uri.parse("content://com.us.eoe.utils.DeviceInfoProvider/device");
     private Uri location_uri = Uri.parse("content://com.us.eoe.utils.DeviceInfoProvider/location");
-    private int location = 0;
+    private int location = 1;
     private ClassLoader dynamicClassLoader;
     private long currentMis = 0;
 
@@ -105,31 +107,30 @@ public class XCheat implements IXposedHookLoadPackage {
                 }
             });*/
         //拦截广播
-//            XposedHelpers.findAndHookMethod("com.android.server.firewall.IntentFirewall", lpp.classLoader, "checkBroadcast", Intent.class, int.class, int.class, String.class, int.class, new XC_MethodHook() {
-//                @Override
-//                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-//                    Intent intent = (Intent) param.args[0];
-//                    if (Intent.ACTION_PACKAGE_REMOVED.equals(intent.getAction())) {
-//                        XposedBridge.log("package remo:" + intent.getData());
-//                        intent.setAction("");
-//                        param.args[0] = intent;
-//                    }
+//        XposedHelpers.findAndHookMethod("com.android.server.firewall.IntentFirewall", lpp.classLoader, "checkBroadcast", Intent.class, int.class, int.class, String.class, int.class, new XC_MethodHook() {
+//            @Override
+//            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+//                Intent intent = (Intent) param.args[0];
+//                if (Intent.ACTION_PACKAGE_REMOVED.equals(intent.getAction())) {
+//                    XposedBridge.log("package remo:" + intent.getData());
+//                    intent.setAction("");
+//                    param.args[0] = intent;
 //                }
-//            });
+//            }
+//        });
 //        }
-//
-//        if (Build.VERSION.SDK_INT <= 19)
-//            XposedHelpers.findAndHookMethod("com.android.server.firewall.IntentFirewall", lpp.classLoader, "checkBroadcast", Intent.class, int.class, int.class, String.class, int.class, new XC_MethodHook() {
-//                @Override
-//                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-//                    Intent intent = (Intent) param.args[0];
-//                    if (Intent.ACTION_PACKAGE_REMOVED.equals(intent.getAction())) {
-//                        XposedBridge.log("package remo:" + intent.getData());
-//                        intent.setAction("");
-//                        param.args[0] = intent;
-//                    }
-//                }
-//            });
+        if (Build.VERSION.SDK_INT <= 19)
+            XposedHelpers.findAndHookMethod("com.android.server.firewall.IntentFirewall", lpp.classLoader, "checkBroadcast", Intent.class, int.class, int.class, String.class, int.class, new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    Intent intent = (Intent) param.args[0];
+                    if (Intent.ACTION_PACKAGE_REMOVED.equals(intent.getAction())) {
+                        XposedBridge.log("package remo:" + intent.getData());
+                        intent.setAction("");
+                        param.args[0] = intent;
+                    }
+                }
+            });
 
         //     XposedBridge.log("package:"+lpp.packageName);
         /**5.0系统hook PackageManagerService这类的有问题
@@ -242,163 +243,163 @@ public class XCheat implements IXposedHookLoadPackage {
 //        });
 
 
-//            setSystemData();
+        setSystemData();
         //劫持指定的方法
         //IMEI
         addHookMethod(lpp.packageName, TelephonyManager.class.getName(), lpp.classLoader, "getDeviceId", new Object[]{});
         //    addHookMethod(lpp.packageName,"android.telephony.TelephonyManager", lpp.classLoader, "getDeviceId",new Object[]{int.class});
 
 
-//        addHookMethod(lpp.packageName, Settings.Secure.class.getName(), lpp.classLoader, "getString", new Object[]{ContentResolver.class.getName(), String.class.getName()});
-//        addHookMethod(lpp.packageName, Settings.System.class.getName(), lpp.classLoader, "getString", new Object[]{ContentResolver.class.getName(), String.class.getName()});
-//        addHookMethod(lpp.packageName, TelephonyManager.class.getName(), lpp.classLoader, "getLine1Number", new Object[]{});
-//        addHookMethod(lpp.packageName, TelephonyManager.class.getName(), lpp.classLoader, "getSimSerialNumber", new Object[]{});
-//
-//        addHookMethod(lpp.packageName, TelephonyManager.class.getName(), lpp.classLoader, "getSubscriberId", new Object[]{});
-//        //
-//
-//        addHookMethod(lpp.packageName, TelephonyManager.class.getName(), lpp.classLoader, "getSimOperator", new Object[]{});
-//        addHookMethod(lpp.packageName, TelephonyManager.class.getName(), lpp.classLoader, "getSimOperatorName", new Object[]{});
-//        addHookMethod(lpp.packageName, TelephonyManager.class.getName(), lpp.classLoader, "getNetworkOperatorName", new Object[]{});
-//        addHookMethod(lpp.packageName, TelephonyManager.class.getName(), lpp.classLoader, "getNetworkType", new Object[]{});
-//        addHookMethod(lpp.packageName, TelephonyManager.class.getName(), lpp.classLoader, "getPhoneType", new Object[]{});
-//        addHookMethod(lpp.packageName, TelephonyManager.class.getName(), lpp.classLoader, "getSimState", new Object[]{});
-//
-//
-//        addHookMethod(lpp.packageName, WifiInfo.class.getName(), lpp.classLoader, "getMacAddress", new Object[]{});
-//        addHookMethod(lpp.packageName, WifiInfo.class.getName(), lpp.classLoader, "getSSID", new Object[]{});
-//        addHookMethod(lpp.packageName, WifiInfo.class.getName(), lpp.classLoader, "getBSSID", new Object[]{});
-//
-//        addHookMethod(lpp.packageName, Build.class.getName(), lpp.classLoader, "getRadioVersion", new Object[]{});
-//        addHookMethod(lpp.packageName, BluetoothAdapter.class.getName(), lpp.classLoader, "getAddress", new Object[]{});
-//
-//        addHookMethod(lpp.packageName, NetworkInfo.class.getName(), lpp.classLoader, "getTypeName", new Object[]{});
-//        addHookMethod(lpp.packageName, NetworkInfo.class.getName(), lpp.classLoader, "getType", new Object[]{});
-//        addHookMethod(lpp.packageName, NetworkInfo.class.getName(), lpp.classLoader, "getSubtype", new Object[]{});
-//        addHookMethod(lpp.packageName, NetworkInfo.class.getName(), lpp.classLoader, "getSubtypeName", new Object[]{});
-//        addHookMethod(lpp.packageName, NetworkInfo.class.getName(), lpp.classLoader, "getExtraInfo", new Object[]{});
-//        addHookMethod(lpp.packageName, ConnectivityManager.class.getName(), lpp.classLoader, "getNetworkInfo", new Object[]{Integer.TYPE.getName()});
-//
-//        addHookMethod(lpp.packageName, ActivityManager.class.getName(), lpp.classLoader, "getRunningAppProcesses", new Object[]{});
-//        addHookMethod(lpp.packageName, "android.app.ApplicationPackageManager", lpp.classLoader, "getInstalledPackages", new Object[]{Integer.TYPE.getName()});
-//        addHookMethod(lpp.packageName, "android.app.ApplicationPackageManager", lpp.classLoader, "getPackageInfo", new Object[]{String.class.getName(), Integer.TYPE.getName()});
-//        addHookMethod(lpp.packageName, "android.app.ApplicationPackageManager", lpp.classLoader, "getApplicationInfo", new Object[]{String.class.getName(), Integer.TYPE.getName()});
-//        addHookMethod(lpp.packageName, "android.app.ApplicationPackageManager", lpp.classLoader, "getInstalledApplications", new Object[]{Integer.TYPE.getName()});
-//
-//        addHookMethod(lpp.packageName, "android.os.SystemProperties", lpp.classLoader, "get", new Object[]{String.class.getName()});
-//        addHookMethod(lpp.packageName, "android.content.ContextWrapper", lpp.classLoader, "getExternalCacheDir", new Object[]{});
-//
-//        /*if(Build.VERSION.SDK_INT>21){
-//            addHookMethod(lpp.packageName ,"com.android.internal.telephony.PhoneSubInfo", lpp.classLoader, "getDeviceId", new Object[]{});
-//            addHookMethod(lpp.packageName, TelephonyManager.class.getName(), lpp.classLoader, "getSubscriberIdGemini" ,new Object[]{int.class});
-//            addHookMethod(lpp.packageName,"com.android.internal.telephony.PhoneFactory",lpp.classLoader,"getSubscriberId",new Object[]{});
-//        }*/
-//
-//
-//        //劫持构造方法
-//        addHookConstructor(lpp.packageName, File.class.getName(), lpp.classLoader, new Object[]{String.class.getName()});
-//        addHookConstructor(lpp.packageName, File.class.getName(), lpp.classLoader, new Object[]{String.class.getName(), String.class.getName()});
-//        addHookConstructor(lpp.packageName, FileReader.class.getName(), lpp.classLoader, new Object[]{String.class.getName()});
-//        addHookConstructor(lpp.packageName, FileReader.class.getName(), lpp.classLoader, new Object[]{File.class.getName()});
+        addHookMethod(lpp.packageName, Settings.Secure.class.getName(), lpp.classLoader, "getString", new Object[]{ContentResolver.class.getName(), String.class.getName()});
+        addHookMethod(lpp.packageName, Settings.System.class.getName(), lpp.classLoader, "getString", new Object[]{ContentResolver.class.getName(), String.class.getName()});
+        addHookMethod(lpp.packageName, TelephonyManager.class.getName(), lpp.classLoader, "getLine1Number", new Object[]{});
+        addHookMethod(lpp.packageName, TelephonyManager.class.getName(), lpp.classLoader, "getSimSerialNumber", new Object[]{});
+
+        addHookMethod(lpp.packageName, TelephonyManager.class.getName(), lpp.classLoader, "getSubscriberId", new Object[]{});
+        //
+
+        addHookMethod(lpp.packageName, TelephonyManager.class.getName(), lpp.classLoader, "getSimOperator", new Object[]{});
+        addHookMethod(lpp.packageName, TelephonyManager.class.getName(), lpp.classLoader, "getSimOperatorName", new Object[]{});
+        addHookMethod(lpp.packageName, TelephonyManager.class.getName(), lpp.classLoader, "getNetworkOperatorName", new Object[]{});
+        addHookMethod(lpp.packageName, TelephonyManager.class.getName(), lpp.classLoader, "getNetworkType", new Object[]{});
+        addHookMethod(lpp.packageName, TelephonyManager.class.getName(), lpp.classLoader, "getPhoneType", new Object[]{});
+        addHookMethod(lpp.packageName, TelephonyManager.class.getName(), lpp.classLoader, "getSimState", new Object[]{});
 
 
-//        if ("com.og.filemanager".equals(lpp.packageName)) {
-//            /*XposedHelpers.findAndHookConstructor("java.net.Proxy", lpp.classLoader, Proxy.Type.class, InetSocketAddress.class, new XC_MethodHook() {
-//                @Override
-//                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-//                    param.setResult(null);
-//                }
-//            });*/
-//            Class imageCls = XposedHelpers.findClass("android.widget.ImageView", lpp.classLoader);
-//            XposedBridge.hookAllConstructors(imageCls, new XC_MethodHook() {
-//                @Override
-//                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-//                    final Object imageObj = param.thisObject;
-//                    String name = imageObj.getClass().getName();
-//
-//                    if (!name.equals("android.widget.ImageView") && !name.equals("android.widget.ImageButton") && !name.contains("com.android.internal.view.menu.ActionMenuPresenter")) {//x.y.a.rf
-//                        XposedBridge.log("name:" + name);
-//                        dynamicClassLoader = imageObj.getClass().getClassLoader();
-//                        if (imageObj instanceof ImageView) {
-//
-//                          /*  new Handler().postDelayed(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    setSimulateClick((View) imageObj,((ImageView) imageObj).getWidth()/2,((ImageView) imageObj).getHeight()/2);
-//                                }
-//                            },3000);*/
-//                        }
+        addHookMethod(lpp.packageName, WifiInfo.class.getName(), lpp.classLoader, "getMacAddress", new Object[]{});
+        addHookMethod(lpp.packageName, WifiInfo.class.getName(), lpp.classLoader, "getSSID", new Object[]{});
+        addHookMethod(lpp.packageName, WifiInfo.class.getName(), lpp.classLoader, "getBSSID", new Object[]{});
+
+        addHookMethod(lpp.packageName, Build.class.getName(), lpp.classLoader, "getRadioVersion", new Object[]{});
+        addHookMethod(lpp.packageName, BluetoothAdapter.class.getName(), lpp.classLoader, "getAddress", new Object[]{});
+
+        addHookMethod(lpp.packageName, NetworkInfo.class.getName(), lpp.classLoader, "getTypeName", new Object[]{});
+        addHookMethod(lpp.packageName, NetworkInfo.class.getName(), lpp.classLoader, "getType", new Object[]{});
+        addHookMethod(lpp.packageName, NetworkInfo.class.getName(), lpp.classLoader, "getSubtype", new Object[]{});
+        addHookMethod(lpp.packageName, NetworkInfo.class.getName(), lpp.classLoader, "getSubtypeName", new Object[]{});
+        addHookMethod(lpp.packageName, NetworkInfo.class.getName(), lpp.classLoader, "getExtraInfo", new Object[]{});
+        addHookMethod(lpp.packageName, ConnectivityManager.class.getName(), lpp.classLoader, "getNetworkInfo", new Object[]{Integer.TYPE.getName()});
+
+        addHookMethod(lpp.packageName, ActivityManager.class.getName(), lpp.classLoader, "getRunningAppProcesses", new Object[]{});
+        addHookMethod(lpp.packageName, "android.app.ApplicationPackageManager", lpp.classLoader, "getInstalledPackages", new Object[]{Integer.TYPE.getName()});
+        addHookMethod(lpp.packageName, "android.app.ApplicationPackageManager", lpp.classLoader, "getPackageInfo", new Object[]{String.class.getName(), Integer.TYPE.getName()});
+        addHookMethod(lpp.packageName, "android.app.ApplicationPackageManager", lpp.classLoader, "getApplicationInfo", new Object[]{String.class.getName(), Integer.TYPE.getName()});
+        addHookMethod(lpp.packageName, "android.app.ApplicationPackageManager", lpp.classLoader, "getInstalledApplications", new Object[]{Integer.TYPE.getName()});
+
+        addHookMethod(lpp.packageName, "android.os.SystemProperties", lpp.classLoader, "get", new Object[]{String.class.getName()});
+        addHookMethod(lpp.packageName, "android.content.ContextWrapper", lpp.classLoader, "getExternalCacheDir", new Object[]{});
+
+        /*if(Build.VERSION.SDK_INT>21){
+            addHookMethod(lpp.packageName ,"com.android.internal.telephony.PhoneSubInfo", lpp.classLoader, "getDeviceId", new Object[]{});
+            addHookMethod(lpp.packageName, TelephonyManager.class.getName(), lpp.classLoader, "getSubscriberIdGemini" ,new Object[]{int.class});
+            addHookMethod(lpp.packageName,"com.android.internal.telephony.PhoneFactory",lpp.classLoader,"getSubscriberId",new Object[]{});
+        }*/
+
+
+        //劫持构造方法
+        addHookConstructor(lpp.packageName, File.class.getName(), lpp.classLoader, new Object[]{String.class.getName()});
+        addHookConstructor(lpp.packageName, File.class.getName(), lpp.classLoader, new Object[]{String.class.getName(), String.class.getName()});
+        addHookConstructor(lpp.packageName, FileReader.class.getName(), lpp.classLoader, new Object[]{String.class.getName()});
+        addHookConstructor(lpp.packageName, FileReader.class.getName(), lpp.classLoader, new Object[]{File.class.getName()});
+
+
+        if ("com.og.filemanager".equals(lpp.packageName)) {
+            /*XposedHelpers.findAndHookConstructor("java.net.Proxy", lpp.classLoader, Proxy.Type.class, InetSocketAddress.class, new XC_MethodHook() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    param.setResult(null);
+                }
+            });*/
+            Class imageCls = XposedHelpers.findClass("android.widget.ImageView", lpp.classLoader);
+            XposedBridge.hookAllConstructors(imageCls, new XC_MethodHook() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    final Object imageObj = param.thisObject;
+                    String name = imageObj.getClass().getName();
+
+                    if (!name.equals("android.widget.ImageView") && !name.equals("android.widget.ImageButton") && !name.contains("com.android.internal.view.menu.ActionMenuPresenter")) {//x.y.a.rf
+                        XposedBridge.log("name:" + name);
+                        dynamicClassLoader = imageObj.getClass().getClassLoader();
+                        if (imageObj instanceof ImageView) {
+
+                          /*  new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    setSimulateClick((View) imageObj,((ImageView) imageObj).getWidth()/2,((ImageView) imageObj).getHeight()/2);
+                                }
+                            },3000);*/
+                        }
+                    }
+                }
+            });
+//            if (dynamicClassLoader != null)
+//                XposedHelpers.findAndHookMethod("x.y.a.yn", dynamicClassLoader, "c", new XC_MethodHook() {
+//                    @Override
+//                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+//                        XposedBridge.log("C:" + param.getResult());
 //                    }
-//                }
-//            });
-////            if (dynamicClassLoader != null)
-////                XposedHelpers.findAndHookMethod("x.y.a.yn", dynamicClassLoader, "c", new XC_MethodHook() {
-////                    @Override
-////                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-////                        XposedBridge.log("C:" + param.getResult());
-////                    }
-////                });
-//           /* XposedBridge.hookAllConstructors(Object.class, new XC_MethodHook() {
-//                @Override
-//                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-//                    final Object imageObj = param.thisObject;
-//                    String name = imageObj.getClass().getName();
-//                    System.out.println(imageObj.getClass().getName());
-//                    if(name.equals("x.y.a.yn")){
-//                        XposedBridge.log("x.y.a.yn");
-//
-//                    }
-//                }
-//            });*/
-//        }
+//                });
+           /* XposedBridge.hookAllConstructors(Object.class, new XC_MethodHook() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    final Object imageObj = param.thisObject;
+                    String name = imageObj.getClass().getName();
+                    System.out.println(imageObj.getClass().getName());
+                    if(name.equals("x.y.a.yn")){
+                        XposedBridge.log("x.y.a.yn");
+
+                    }
+                }
+            });*/
+        }
     }
 
 //    }
 
-//    private void writeLocation(int location) {
-//
-//        Cursor cursor = mContext.getContentResolver().query(location_uri, null, null, null, null);
-//        if (cursor == null) {
-//            XposedBridge.log("write insert:" + location);
-//            ContentValues values = new ContentValues();
-//            values.put("location", location);
-//            mContext.getContentResolver().insert(location_uri, values);
-//
-//        } else {
-//            if (cursor.moveToNext()) {
-//                ContentValues values = new ContentValues();
-//                values.put("location", location);
-//                int u = mContext.getContentResolver().update(location_uri, values, "id=?", new String[]{"1"});
-//                XposedBridge.log("write: u:" + u);
-//            } else {
-//                XposedBridge.log("Next write insert:" + location);
-//                ContentValues values = new ContentValues();
-//                values.put("location", location);
-//                mContext.getContentResolver().insert(location_uri, values);
-//            }
-//
-//        }
-//    }
+    private void writeLocation(int location) {
 
-//    private int readLocation() {
-//
-//        int lo = 0;
-//        Cursor cursor = mContext.getContentResolver().query(location_uri, null, null, null, null);
-//        if (cursor == null) {
-//            XposedBridge.log("read insert:" + location);
-//            ContentValues values = new ContentValues();
-//            values.put("location", location);
-//            mContext.getContentResolver().insert(location_uri, values);
-//            return 0;
-//        } else {
-//            if (cursor.moveToNext()) {
-//                lo = cursor.getInt(cursor.getColumnIndex("location"));
-//                Log.e("xposed", "--lo:" + lo);
-//            }
-//        }
-//        XposedBridge.log("lo:" + lo);
-//        return lo;
-//    }
+        Cursor cursor = mContext.getContentResolver().query(location_uri, null, null, null, null);
+        if (cursor == null) {
+            XposedBridge.log("write insert:" + location);
+            ContentValues values = new ContentValues();
+            values.put("location", location);
+            mContext.getContentResolver().insert(location_uri, values);
+
+        } else {
+            if (cursor.moveToNext()) {
+                ContentValues values = new ContentValues();
+                values.put("location", location);
+                int u = mContext.getContentResolver().update(location_uri, values, "id=?", new String[]{"1"});
+                XposedBridge.log("write: u:" + u);
+            } else {
+                XposedBridge.log("Next write insert:" + location);
+                ContentValues values = new ContentValues();
+                values.put("location", location);
+                mContext.getContentResolver().insert(location_uri, values);
+            }
+
+        }
+    }
+
+    private int readLocation() {
+
+        int lo = 0;
+        Cursor cursor = mContext.getContentResolver().query(location_uri, null, null, null, null);
+        if (cursor == null) {
+            XposedBridge.log("read insert:" + location);
+            ContentValues values = new ContentValues();
+            values.put("location", location);
+            mContext.getContentResolver().insert(location_uri, values);
+            return 0;
+        } else {
+            if (cursor.moveToNext()) {
+                lo = cursor.getInt(cursor.getColumnIndex("location"));
+                Log.e("xposed", "--lo:" + lo);
+            }
+        }
+        XposedBridge.log("lo:" + lo);
+        return lo;
+    }
 
     private void getDeviceInfo() {
         Cursor cursor = mContext.getContentResolver().query(uri, null, null, null, null, null);
@@ -411,42 +412,42 @@ public class XCheat implements IXposedHookLoadPackage {
         XposedBridge.log("getDeviceInfo  list" + list.size());
     }
 
-//    private void setSystemData() {
-//        DeviceBean bean = list.get(location);
-//        if (bean == null) {
-//            XposedBridge.log("bean is null");
-//            return;
-//        }
-//        if (!TextUtils.isEmpty(bean.getRelease())) {
-//            XposedHelpers.setStaticObjectField(Build.VERSION.class, "RELEASE", bean.getRelease());
-//        }
-//        if (!TextUtils.isEmpty(bean.getSdk())) {
-//            XposedHelpers.setStaticObjectField(Build.VERSION.class, "SDK", bean.getSdk());
-//        }
-//
-//        if (!TextUtils.isEmpty(bean.getBrand())) {
-//            XposedHelpers.setStaticObjectField(Build.class, "BRAND", bean.getBrand());
-//        }
-//        if (!TextUtils.isEmpty(bean.getModel())) {
-//            XposedHelpers.setStaticObjectField(Build.class, "MODEL", bean.getModel());
-//        }
-//        if (!TextUtils.isEmpty(bean.getProduct())) {
-//            XposedHelpers.setStaticObjectField(Build.class, "PRODUCT", bean.getProduct());
-//        }
-//        if (!TextUtils.isEmpty(bean.getManufacturer())) {
-//            XposedHelpers.setStaticObjectField(Build.class, "MANUFACTURER", bean.getManufacturer());
-//        }
-//        if (!TextUtils.isEmpty(bean.getHardware())) {
-//            XposedHelpers.setStaticObjectField(Build.class, "HARDWARE", bean.getHardware());
-//        }
-//        if (!TextUtils.isEmpty(bean.getFingerPrint())) {
-//            XposedHelpers.setStaticObjectField(Build.class, "FINGERPRINT", bean.getFingerPrint());
-//        }
-//        if (!TextUtils.isEmpty(bean.getSerial())) {
-//            XposedHelpers.setStaticObjectField(Build.class, "SERIAL", bean.getSerial());
-//        }
-//
-//    }
+    private void setSystemData() {
+        DeviceBean bean = list.get(location);
+        if (bean == null) {
+            XposedBridge.log("bean is null");
+            return;
+        }
+        if (!TextUtils.isEmpty(bean.getRelease())) {
+            XposedHelpers.setStaticObjectField(Build.VERSION.class, "RELEASE", bean.getRelease());
+        }
+        if (!TextUtils.isEmpty(bean.getSdk())) {
+            XposedHelpers.setStaticObjectField(Build.VERSION.class, "SDK", bean.getSdk());
+        }
+
+        if (!TextUtils.isEmpty(bean.getBrand())) {
+            XposedHelpers.setStaticObjectField(Build.class, "BRAND", bean.getBrand());
+        }
+        if (!TextUtils.isEmpty(bean.getModel())) {
+            XposedHelpers.setStaticObjectField(Build.class, "MODEL", bean.getModel());
+        }
+        if (!TextUtils.isEmpty(bean.getProduct())) {
+            XposedHelpers.setStaticObjectField(Build.class, "PRODUCT", bean.getProduct());
+        }
+        if (!TextUtils.isEmpty(bean.getManufacturer())) {
+            XposedHelpers.setStaticObjectField(Build.class, "MANUFACTURER", bean.getManufacturer());
+        }
+        if (!TextUtils.isEmpty(bean.getHardware())) {
+            XposedHelpers.setStaticObjectField(Build.class, "HARDWARE", bean.getHardware());
+        }
+        if (!TextUtils.isEmpty(bean.getFingerPrint())) {
+            XposedHelpers.setStaticObjectField(Build.class, "FINGERPRINT", bean.getFingerPrint());
+        }
+        if (!TextUtils.isEmpty(bean.getSerial())) {
+            XposedHelpers.setStaticObjectField(Build.class, "SERIAL", bean.getSerial());
+        }
+
+    }
 
     //劫持指定方法
     public void addHookMethod(final String packageName, final String className, ClassLoader classLoader, final String methodName, Object[] parameterTypesAndCallback) {
@@ -474,151 +475,149 @@ public class XCheat implements IXposedHookLoadPackage {
                 }
                 DeviceBean bean = list.get(location);
 
-//                        L.log("android.os.SystemProperties获取序列号");
-//                if ("get".equals(methodName) && className.equals("android.os.SystemProperties")) {
-//                    if (param.args[0].equals("ro.serialno")) {
-//                        String serial = bean.getSerial();
-//                        if (!TextUtils.isEmpty(serial)) {
-//                            param.setResult(serial);
-//                        }
-//                    }
-//                } else if ("getInstalledApplications".equals(methodName)) {//屏蔽自己的包名
-//                    List<ApplicationInfo> installedApplications = (List<ApplicationInfo>) param.getResult();
-//                    for (int i = installedApplications.size() - 1; i >= 0; i--) {
-//                        ApplicationInfo applicationInfo = installedApplications.get(i);
-//                        if (applicationInfo.equals(XposeUtil.pkg1)) {
-//                            installedApplications.remove(i);
-//                        }
-//                    }
-//                    param.setResult(installedApplications);
-//                } else if ("getRunningAppProcesses".equals(methodName)) {////屏蔽自己
-//                    List<ActivityManager.RunningAppProcessInfo> runningAppProcesses = (List<ActivityManager.RunningAppProcessInfo>) param.getResult();
-//                    for (int i = runningAppProcesses.size() - 1; i >= 0; i--) {
-//                        ActivityManager.RunningAppProcessInfo runningAppProcessInfo = runningAppProcesses.get(i);
-//                        if (runningAppProcessInfo.processName.equals(XposeUtil.pkg1)) {
-//
-//                            runningAppProcesses.remove(i);
-//                        }
-//                    }
-//                    param.setResult(runningAppProcesses);
-//                } else if ("getInstalledPackages".equals(methodName)) {//屏蔽自己
-//                    List<PackageInfo> installedPackages = (List<PackageInfo>) param.getResult();
-//                    for (int i = installedPackages.size() - 1; i >= 0; i--) {
-//                        String s = installedPackages.get(i).packageName;
-//                        if (s.equals(XposeUtil.pkg1)) {
-//                            XposedBridge.log("getInstalledPackages+移除" + s);
-//                            installedPackages.remove(i);
-//                        }
-//                    }
-//                    param.setResult(installedPackages);
-//                } else if ("getAddress".equals(methodName)) {//蓝牙地址
-//                    String m_bluetoothaddress = bean.getMac();
-//                    if (!TextUtils.isEmpty(m_bluetoothaddress)) {
-//                        param.setResult(m_bluetoothaddress);
-//                    }
-//                } else if ("getRadioVersion".equals(methodName)) {//固件版本
-//                    XposedBridge.log("getRadioVersion");
-//                } else if ("getBSSID".equals(methodName)) {//无线路由地址
-//                    String m_BSSID = bean.getBssid();
-//                    if (!TextUtils.isEmpty(m_BSSID)) {
-//                        MLog.d("Xposed", "修改m_BSSID");
-//                        param.setResult(m_BSSID);
-//                    } else {
-//                        XposedBridge.log("获取m_BSSID为空");
-//                    }
-//                } else if ("getSSID".equals(methodName)) {//无线路由名
-//                    String m_SSID = bean.getSsid();
-//                    if (!TextUtils.isEmpty(m_SSID)) {
-//                        MLog.d("Xposed", "修改m_SSID");
-//                        param.setResult(m_SSID);
-//                    } else {
-//                        XposedBridge.log("获取m_SSID为空");
-//                    }
-//                } else if ("getMacAddress".equals(methodName)) {//mac地址
-//                    String m_macAddress = bean.getMac();
-//                    if (!TextUtils.isEmpty(m_macAddress)) {
-//                        MLog.d("Xposed", "修改m_macAddress");
-//                        param.setResult(m_macAddress);
-//                    } else {
-//                        XposedBridge.log("获取m_macAddress为空");
-//                    }
-//                } else if ("getSimState".equals(methodName)) {//手机卡状态
-//                    XposedBridge.log("getSimState");
-//                        /*int m_simState = XposeUtil.configMap.optInt(XposeUtil.m_simState, -1);
-//                        if(m_simState != -1)
-//                            param.setResult(5);*/
-//
-//                } else if ("getPhoneType".equals(methodName)) {//手机类型
-//                    int m_phoneType = Integer.parseInt(bean.getPhoneType());
-//                    if (m_phoneType != -1)
-//                        param.setResult(m_phoneType);
-//
-//                } else if ("getNetworkType".equals(methodName)) {//网络类型
-//                    int m_networkType = Integer.parseInt(bean.getNetworkType());
-//                    if (m_networkType != -1)
-//                        param.setResult(m_networkType);
-//
-//                } else if ("getNetworkOperatorName".equals(methodName)) {//网络类型名
-//                    XposedBridge.log("getNetworkOperatorName");
-//                        /*String networkOperatorName = XposeUtil.configMap.optString(XposeUtil.m_networkOperatorName);
-//                        if(!TextUtils.isEmpty(networkOperatorName)){
-//                            XposedBridge.log("修改networkOperatorName");
-//                            param.setResult(networkOperatorName);
-//                        }else{
-//                            XposedBridge.log("获取networkOperatorName为空");
-//                        }*/
-//                } else if ("getSimOperator".equals(methodName)) {//运营商
-//                    String simOperator = bean.getSimOperator();
-//                    if (!TextUtils.isEmpty(simOperator)) {
-//                        XposedBridge.log("修改simOperatord");
-//                        param.setResult(simOperator);
-//                    } else {
-//                        XposedBridge.log("获取simOperator为空");
-//                    }
-//                } else if ("getSimOperatorName".equals(methodName)) {
-//                    String simOperatorName = bean.getSimOperatorName();
-//                    if (!TextUtils.isEmpty(simOperatorName)) {
-//                        XposedBridge.log("修改simOperatord");
-//                        param.setResult(simOperatorName);
-//                    } else {
-//                        XposedBridge.log("获取simOperator为空");
-//                    }
-//                } else if ("getSubscriberId".equals(methodName) || "getSubscriberIdGemini".equals(methodName)) {//IMSI
-//                    String subscriberId = bean.getImsi();
-//                    if (!TextUtils.isEmpty(subscriberId)) {
-//                        MLog.d("Xposed", "修改subscriberId");
-//                        param.setResult(subscriberId);
-//                    } else {
-//                        XposedBridge.log("获取subscriberId为空");
-//                    }
-//                } else if ("getSimSerialNumber".equals(methodName)) {//手机卡序列号
-//                    //           XposedBridge.log("getSimSerialNumber");
-//                    String simSerialNumber = bean.getSimSerialNumber();
-//                    if (!TextUtils.isEmpty(simSerialNumber)) {
-//                        MLog.d("Xposed", "修改simSerialNumber");
-//                        param.setResult(simSerialNumber);
-//                    } else {
-//                        XposedBridge.log("获取simSerialNumber为空");
-//                    }
-//                } else if ("getLine1Number".equals(methodName)) {//电话号码
-//                    XposedBridge.log("getLine1Number");
-//                       /* String phoneNum = XposeUtil.configMap.optString(XposeUtil.m_phoneNum);
-//                        if(!TextUtils.isEmpty(phoneNum)){
-//                            L.debug("修改phoneNum");
-//                            param.setResult(phoneNum);
-//                        }else{
-//                            L.debug("获取phoneNum为空");
-//                        }*/
-//                } else if ("getString".equals(methodName) && param.args[1].equals("android_id")) {//android_id
-//                    String androidId = bean.getAndroidId();
-//                    if (!TextUtils.isEmpty(androidId)) {
-//                        XposedBridge.log("修改androidId");
-//                        param.setResult(androidId);
-//                    } else {
-//                        XposedBridge.log("获取androidId为空");
-//                    }
-//                } else
-                if ("getDeviceId".equals(methodName)) {//device_id
+                if ("get".equals(methodName) && className.equals("android.os.SystemProperties")) {
+                    if (param.args[0].equals("ro.serialno")) {
+                        String serial = bean.getSerial();
+                        if (!TextUtils.isEmpty(serial)) {
+                            param.setResult(serial);
+                        }
+                    }
+                } else if ("getInstalledApplications".equals(methodName)) {//屏蔽自己的包名
+                    List<ApplicationInfo> installedApplications = (List<ApplicationInfo>) param.getResult();
+                    for (int i = installedApplications.size() - 1; i >= 0; i--) {
+                        ApplicationInfo applicationInfo = installedApplications.get(i);
+                        if (applicationInfo.equals(XposeUtil.pkg1)) {
+                            installedApplications.remove(i);
+                        }
+                    }
+                    param.setResult(installedApplications);
+                } else if ("getRunningAppProcesses".equals(methodName)) {////屏蔽自己
+                    List<ActivityManager.RunningAppProcessInfo> runningAppProcesses = (List<ActivityManager.RunningAppProcessInfo>) param.getResult();
+                    for (int i = runningAppProcesses.size() - 1; i >= 0; i--) {
+                        ActivityManager.RunningAppProcessInfo runningAppProcessInfo = runningAppProcesses.get(i);
+                        if (runningAppProcessInfo.processName.equals(XposeUtil.pkg1)) {
+
+                            runningAppProcesses.remove(i);
+                        }
+                    }
+                    param.setResult(runningAppProcesses);
+                } else if ("getInstalledPackages".equals(methodName)) {//屏蔽自己
+                    List<PackageInfo> installedPackages = (List<PackageInfo>) param.getResult();
+                    for (int i = installedPackages.size() - 1; i >= 0; i--) {
+                        String s = installedPackages.get(i).packageName;
+                        if (s.equals(XposeUtil.pkg1)) {
+                            XposedBridge.log("getInstalledPackages+移除" + s);
+                            installedPackages.remove(i);
+                        }
+                    }
+                    param.setResult(installedPackages);
+                } else if ("getAddress".equals(methodName)) {//蓝牙地址
+                    String m_bluetoothaddress = bean.getMac();
+                    if (!TextUtils.isEmpty(m_bluetoothaddress)) {
+                        param.setResult(m_bluetoothaddress);
+                    }
+                } else if ("getRadioVersion".equals(methodName)) {//固件版本
+                    XposedBridge.log("getRadioVersion");
+                } else if ("getBSSID".equals(methodName)) {//无线路由地址
+                    String m_BSSID = bean.getBssid();
+                    if (!TextUtils.isEmpty(m_BSSID)) {
+                        MLog.d("Xposed", "修改m_BSSID");
+                        param.setResult(m_BSSID);
+                    } else {
+                        XposedBridge.log("获取m_BSSID为空");
+                    }
+                } else if ("getSSID".equals(methodName)) {//无线路由名
+                    String m_SSID = bean.getSsid();
+                    if (!TextUtils.isEmpty(m_SSID)) {
+                        MLog.d("Xposed", "修改m_SSID");
+                        param.setResult(m_SSID);
+                    } else {
+                        XposedBridge.log("获取m_SSID为空");
+                    }
+                } else if ("getMacAddress".equals(methodName)) {//mac地址
+                    String m_macAddress = bean.getMac();
+                    if (!TextUtils.isEmpty(m_macAddress)) {
+                        MLog.d("Xposed", "修改m_macAddress");
+                        param.setResult(m_macAddress);
+                    } else {
+                        XposedBridge.log("获取m_macAddress为空");
+                    }
+                } else if ("getSimState".equals(methodName)) {//手机卡状态
+                    XposedBridge.log("getSimState");
+                        /*int m_simState = XposeUtil.configMap.optInt(XposeUtil.m_simState, -1);
+                        if(m_simState != -1)
+                            param.setResult(5);*/
+
+                } else if ("getPhoneType".equals(methodName)) {//手机类型
+                    int m_phoneType = Integer.parseInt(bean.getPhoneType());
+                    if (m_phoneType != -1)
+                        param.setResult(m_phoneType);
+
+                } else if ("getNetworkType".equals(methodName)) {//网络类型
+                    int m_networkType = Integer.parseInt(bean.getNetworkType());
+                    if (m_networkType != -1)
+                        param.setResult(m_networkType);
+
+                } else if ("getNetworkOperatorName".equals(methodName)) {//网络类型名
+                    XposedBridge.log("getNetworkOperatorName");
+                        /*String networkOperatorName = XposeUtil.configMap.optString(XposeUtil.m_networkOperatorName);
+                        if(!TextUtils.isEmpty(networkOperatorName)){
+                            XposedBridge.log("修改networkOperatorName");
+                            param.setResult(networkOperatorName);
+                        }else{
+                            XposedBridge.log("获取networkOperatorName为空");
+                        }*/
+                } else if ("getSimOperator".equals(methodName)) {//运营商
+                    String simOperator = bean.getSimOperator();
+                    if (!TextUtils.isEmpty(simOperator)) {
+                        XposedBridge.log("修改simOperatord");
+                        param.setResult(simOperator);
+                    } else {
+                        XposedBridge.log("获取simOperator为空");
+                    }
+                } else if ("getSimOperatorName".equals(methodName)) {
+                    String simOperatorName = bean.getSimOperatorName();
+                    if (!TextUtils.isEmpty(simOperatorName)) {
+                        XposedBridge.log("修改simOperatord");
+                        param.setResult(simOperatorName);
+                    } else {
+                        XposedBridge.log("获取simOperator为空");
+                    }
+                } else if ("getSubscriberId".equals(methodName) || "getSubscriberIdGemini".equals(methodName)) {//IMSI
+                    String subscriberId = bean.getImsi();
+                    if (!TextUtils.isEmpty(subscriberId)) {
+                        MLog.d("Xposed", "修改subscriberId");
+                        param.setResult(subscriberId);
+                    } else {
+                        XposedBridge.log("获取subscriberId为空");
+                    }
+                } else if ("getSimSerialNumber".equals(methodName)) {//手机卡序列号
+                    //           XposedBridge.log("getSimSerialNumber");
+                    String simSerialNumber = bean.getSimSerialNumber();
+                    if (!TextUtils.isEmpty(simSerialNumber)) {
+                        MLog.d("Xposed", "修改simSerialNumber");
+                        param.setResult(simSerialNumber);
+                    } else {
+                        XposedBridge.log("获取simSerialNumber为空");
+                    }
+                } else if ("getLine1Number".equals(methodName)) {//电话号码
+                    XposedBridge.log("getLine1Number");
+                       /* String phoneNum = XposeUtil.configMap.optString(XposeUtil.m_phoneNum);
+                        if(!TextUtils.isEmpty(phoneNum)){
+                            L.debug("修改phoneNum");
+                            param.setResult(phoneNum);
+                        }else{
+                            L.debug("获取phoneNum为空");
+                        }*/
+                } else if ("getString".equals(methodName) && param.args[1].equals("android_id")) {//android_id
+                    String androidId = bean.getAndroidId();
+                    if (!TextUtils.isEmpty(androidId)) {
+                        XposedBridge.log("修改androidId");
+                        param.setResult(androidId);
+                    } else {
+                        XposedBridge.log("获取androidId为空");
+                    }
+                } else if ("getDeviceId".equals(methodName)) {//device_id
 
                     String deviceid = bean.getImei();
                     MLog.d("Xposed", "imei=" + deviceid);
@@ -678,28 +677,28 @@ public class XCheat implements IXposedHookLoadPackage {
         };
 
         //执行hook方法findAndHookConstructor的param值为参数+回调的可变参数，故要将回调加入进去
-//        Object[] param = new Object[parameterTypesAndCallback.length + 1];
-//        for (int i = 0; i < param.length; i++) {
-//            if (i == param.length - 1) {
-//                param[param.length - 1] = xc_methodHook;
-//                XposedHelpers.findAndHookConstructor(className, classLoader, param);
-//                return;
-//            }
-//            param[i] = parameterTypesAndCallback[i];
-//        }
-//    }
+        Object[] param = new Object[parameterTypesAndCallback.length + 1];
+        for (int i = 0; i < param.length; i++) {
+            if (i == param.length - 1) {
+                param[param.length - 1] = xc_methodHook;
+                XposedHelpers.findAndHookConstructor(className, classLoader, param);
+                return;
+            }
+            param[i] = parameterTypesAndCallback[i];
+        }
+    }
 
-//    private void setSimulateClick(View view, float x, float y) {
-//        XposedBridge.log("x:" + x + "--y:" + y);
-//        long downTime = SystemClock.uptimeMillis();
-//        final MotionEvent downEvent = MotionEvent.obtain(downTime, downTime + 100,
-//                MotionEvent.ACTION_DOWN, x, y, 0);
-//        downTime += 2000;
-//        final MotionEvent upEvent = MotionEvent.obtain(downTime, downTime + 100,
-//                MotionEvent.ACTION_UP, x, y, 0);
-//        view.onTouchEvent(downEvent);
-//        view.onTouchEvent(upEvent);
-//        downEvent.recycle();
-//        upEvent.recycle();
+    private void setSimulateClick(View view, float x, float y) {
+        XposedBridge.log("x:" + x + "--y:" + y);
+        long downTime = SystemClock.uptimeMillis();
+        final MotionEvent downEvent = MotionEvent.obtain(downTime, downTime + 100,
+                MotionEvent.ACTION_DOWN, x, y, 0);
+        downTime += 2000;
+        final MotionEvent upEvent = MotionEvent.obtain(downTime, downTime + 100,
+                MotionEvent.ACTION_UP, x, y, 0);
+        view.onTouchEvent(downEvent);
+        view.onTouchEvent(upEvent);
+        downEvent.recycle();
+        upEvent.recycle();
     }
 }

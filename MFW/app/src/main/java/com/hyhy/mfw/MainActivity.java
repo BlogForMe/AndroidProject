@@ -41,12 +41,14 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void getDeviceInfo() {
-        Cursor cursor = this.getContentResolver().query(uri, null, null, null, null, null);
-        if (cursor == null) {
+        Cursor c = this.getContentResolver().query(uri, null, null, null, null, null);
+        if (c == null) {
             return;
         }
-        List<DeviceBean> list = DbUtil.queryDevice(cursor);
 
+        while (c.moveToNext()) {
+            System.out.println(c.getString(c.getColumnIndex("brand")));
+        }
     }
 
 }
