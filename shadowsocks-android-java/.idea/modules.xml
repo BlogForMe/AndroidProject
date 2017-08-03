@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ContentProvider.iml" filepath="$PROJECT_DIR$/ContentProvider.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/contenttest/contenttest.iml" filepath="$PROJECT_DIR$/contenttest/contenttest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shadowsocks.iml" filepath="$PROJECT_DIR$/shadowsocks.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shadowsocks-android-java.iml" filepath="$PROJECT_DIR$/shadowsocks-android-java.iml" />
     </modules>
   </component>
 </project>
