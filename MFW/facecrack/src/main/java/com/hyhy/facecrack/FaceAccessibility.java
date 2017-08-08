@@ -10,7 +10,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.PixelFormat;
 import android.os.Handler;
-import android.util.EventLog;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -127,8 +126,8 @@ public class FaceAccessibility extends AccessibilityService {
                 return;
             }
             AccessibilityNodeInfo userEditText = userList.get(0);
-            inputText(userEditText, "a18720629586@163.com");
-            inputText(pwdList.get(0), "ab123456");
+            inputText(userEditText, "gbalntln@gmail.com");
+            inputText(pwdList.get(0), "aDYriI");
 
             //点击登录
             List<AccessibilityNodeInfo> loginList = nodeInfo.findAccessibilityNodeInfosByViewId("com.facebook.katana:id/login_login");
